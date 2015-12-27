@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="jdbcUrl" value="${es.database.url}"/>
+        <property name="user" value="${es.database.username}"/>
+        <property name="password" value="${es.database.password}"/>
+        <property name="driverClass" value="${es.database.driver}"/>
+        <property name="initialPoolSize" value="1"/>
+        <property name="maxPoolSize" value="15"/>
+        <property name="minPoolSize" value="1"/>
+        <property name="maxIdleTime" value="180"/>
+        <property name="idleConnectionTestPeriod" value="60"/>
+        <property name="testConnectionOnCheckin" value="true"/>
+        <property name="acquireIncrement" value="3"/>
+        <property name="acquireRetryAttempts" value="30"/>
+        <property name="acquireRetryDelay" value="1000"/>
+        <property name="preferredTestQuery" value="SELECT 1"/>
+    </bean>
+
+    <!--hibernate的DAO用这个SessionFactory-->
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" >
+            <list>
+                <value>com.es.webservice.model</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <value>
+                hibernate.dialect=${hibernate.dialect}
+                hibernate.show_sql=${hibernate.show_sql}
+                hibernate.generate_statistics=true
+                hibernate.format_sql=true
+                hibernate.query.factory_class=org.hibernate.hql.internal.ast.ASTQueryTranslatorFactory
+                <!--hibernate.cache.use_second_level_cache=true-->
+                hibernate.cache.provider_class=net.sf.ehcache.hibernate.EhCacheProvider
+                <!--hibernate.cache.region.factory_class=org.hibernate.cache.ehcache.EhCacheRegionFactory-->
+                <!--hibernate.cache.use_query_cache=true-->
+            </value>
+        </property>
+    </bean>
+
+    <!-- 数据库模板类 -->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+</beans>
