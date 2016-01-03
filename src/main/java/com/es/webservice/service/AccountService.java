@@ -6,6 +6,7 @@ import com.es.webservice.dto.LoginResult;
 import com.es.webservice.dto.ResultBean;
 import com.es.webservice.model.Account;
 import com.es.webservice.util.MD5Util;
+import com.es.webservice.util.SysConstants;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ public class AccountService {
         Account account = new Account();
         account.setTel(dto.getTel());
         account.setPassword(MD5Util.MD5(dto.getPassword()));
+        account.setIsMain(SysConstants.IS_MAIN_YES);
         account.setIp(dto.getIp());
         account.setRegisterTime(new Date());
         logger.info("new user register success. tel: " + account.getTel() + ", ip: " + account.getIp());

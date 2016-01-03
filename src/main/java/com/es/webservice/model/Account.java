@@ -20,6 +20,8 @@ public class Account implements Serializable {
     private Double waistline;
     private Integer height;
     private String password;
+    private Integer isMain;
+    private Integer parentAccountId;
     private String ip;
     private Date registerTime;
     private Date lastLoginTime;
@@ -97,6 +99,24 @@ public class Account implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Column(name = "IS_MAIN")
+    public Integer getIsMain() {
+        return isMain;
+    }
+
+    public void setIsMain(Integer isMain) {
+        this.isMain = isMain;
+    }
+
+    @Column(name = "PARENT_ACCOUNT_ID")
+    public Integer getParentAccountId() {
+        return parentAccountId;
+    }
+
+    public void setParentAccountId(Integer parentAccountId) {
+        this.parentAccountId = parentAccountId;
     }
 
     @Column(name = "IP")
