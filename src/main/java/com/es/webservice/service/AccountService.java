@@ -13,7 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by dongYer on 15/11/25.
@@ -105,6 +107,57 @@ public class AccountService {
         }
         logger.info("user password changed. accountId: " + account.getAccountId() + ", ip: " + account.getIp());
         return new ResultBean(true, "");
+    }
+
+    public ResultBean addNewAccount(AccountDto dto) {
+        Account account = accountDao.get(dto.getParentAccountId());
+        if (account == null) {
+            return new ResultBean(false, "");
+        }
+        Account newAccount = new Account();
+
+        newAccount.setAccountName(dto.getAccountName());
+        newAccount.setGender(dto.getGender());
+        newAccount.setBirth(dto.getBirth());
+        newAccount.setWaistline(dto.getWaistline());
+        newAccount.setHeight(dto.getHeight());
+        newAccount.setUpdateTime(new Date());
+        newAccount.setIsMain(SysConstants.IS_MAIN_NO);
+        newAccount.setParentAccountId(account.getParentAccountId());
+        newAccount.setRegisterTime(new Date());
+
+        newAccount = accountDao.add(newAccount);
+        if (newAccount == null) {
+            return new ResultBean(false, "");
+        }
+
+        ResultBean resultBean = new ResultBean(true, "");
+        resultBean.setData(newAccount);
+        logger.info("add new account. accountId: " + newAccount.getAccountId());
+        return resultBean;
+    }
+
+    public ResultBean getAccountList(String parentAccountId) {
+        List<Account> accountList = accountDao.queryAccountListByParentAccountId(parentAccountId);
+        List<AccountDto> dtoList = new ArrayList<AccountDto>();
+        if (accountList != null) {
+            for (Account account: accountList) {
+                AccountDto dto = new AccountDto();
+                dto.setAccountId(account.getAccountId());
+                dto.setAccountName(account.getAccountName());
+                dto.setGender(account.getGender());
+                dto.setBirth(account.getBirth());
+                dto.setWaistline(account.getWaistline());
+                dto.setHeight(account.getHeight());
+                dto.setIsMain(account.getIsMain());
+                dto.setParentAccountId(account.getParentAccountId());
+
+                dtoList.add(dto);
+            }
+        }
+        ResultBean bean = new ResultBean(true, "");
+        bean.setData(dtoList);
+        return bean;
     }
 
     public boolean checkLogin(Integer accountId, String token) {

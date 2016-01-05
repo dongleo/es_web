@@ -9,6 +9,7 @@ import com.es.webservice.util.RequestUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
@@ -44,6 +45,21 @@ public class DefaultController {
                             @RequestBody AccountDto dto) {
         dto.setIp(RequestUtil.getIp(request));
         return accountService.edit(dto);
+    }
+
+    @RequestMapping("addNewAccount")
+    @ResponseBody
+    public ResultBean addNewAccount(HttpServletRequest request,
+                                    @RequestBody AccountDto dto) {
+        dto.setIp(RequestUtil.getIp(request));
+        return accountService.addNewAccount(dto);
+    }
+
+    @RequestMapping("getAccountList")
+    @ResponseBody
+    public ResultBean getAccountList(HttpServletRequest request,
+                                    @RequestParam String parentAccountId) {
+        return accountService.getAccountList(parentAccountId);
     }
 
     @RequestMapping("passwd/modify")

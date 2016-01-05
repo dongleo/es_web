@@ -31,4 +31,11 @@ public class AccountDao extends BaseHibernateDao4<Account, Integer> {
         }
         return null;
     }
+
+    public List<Account> queryAccountListByParentAccountId(String accountId) {
+        String hql = "from Account a where a.accountId = :accountId or a.parentAccountId = :accountId";
+        Map<String, String> params = new HashMap<>();
+        params.put("accountId", accountId);
+        return this.find(hql, params);
+    }
 }

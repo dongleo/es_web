@@ -18,6 +18,8 @@ public class AccountDto implements Serializable {
     private Integer height;
     private String password;
     private String passwordCfm;
+    private Integer isMain;
+    private Integer parentAccountId;
     private String ip;
 
     public Integer getAccountId() {
@@ -98,5 +100,21 @@ public class AccountDto implements Serializable {
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    public Integer getIsMain() {
+        return isMain;
+    }
+
+    public void setIsMain(Integer isMain) {
+        this.isMain = isMain;
+    }
+
+    public Integer getParentAccountId() {
+        return parentAccountId;
+    }
+
+    public void setParentAccountId(Integer parentAccountId) {
+        this.parentAccountId = parentAccountId;
     }
 }
