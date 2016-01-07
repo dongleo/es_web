@@ -23,6 +23,7 @@ public class Account implements Serializable {
     private Integer isMain;
     private Integer parentAccountId;
     private String ip;
+    private Integer isDelete;
     private Date registerTime;
     private Date lastLoginTime;
     private Date updateTime;
@@ -126,6 +127,15 @@ public class Account implements Serializable {
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    @Column(name = "IS_DELETE")
+    public Integer getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(Integer isDelete) {
+        this.isDelete = isDelete;
     }
 
     @Column(name = "REGISTER_TIME")

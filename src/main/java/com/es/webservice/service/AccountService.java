@@ -137,11 +137,11 @@ public class AccountService {
         return resultBean;
     }
 
-    public ResultBean getAccountList(String parentAccountId) {
+    public ResultBean getAccountList(Integer parentAccountId) {
         List<Account> accountList = accountDao.queryAccountListByParentAccountId(parentAccountId);
         List<AccountDto> dtoList = new ArrayList<AccountDto>();
         if (accountList != null) {
-            for (Account account: accountList) {
+            for (Account account : accountList) {
                 AccountDto dto = new AccountDto();
                 dto.setAccountId(account.getAccountId());
                 dto.setAccountName(account.getAccountName());
@@ -158,6 +158,20 @@ public class AccountService {
         ResultBean bean = new ResultBean(true, "");
         bean.setData(dtoList);
         return bean;
+    }
+
+    public ResultBean deleteAccount(Integer accountId, Integer parentAccountId) {
+        Account parentAccount = accountDao.get(parentAccountId);
+        if (parentAccount == null) {
+            return new ResultBean(false, "");
+        }
+
+        Account account = accountDao.get(accountId);
+        account.setIsDelete(SysConstants.IS_DELETE_YES);
+
+        Boolean result = accountDao.update(account);
+
+        return new ResultBean(result, "");
     }
 
     public boolean checkLogin(Integer accountId, String token) {

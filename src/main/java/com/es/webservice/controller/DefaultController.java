@@ -7,10 +7,7 @@ import com.es.webservice.service.AccountService;
 import com.es.webservice.service.PhyIndexService;
 import com.es.webservice.util.RequestUtil;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -58,8 +55,14 @@ public class DefaultController {
     @RequestMapping("getAccountList")
     @ResponseBody
     public ResultBean getAccountList(HttpServletRequest request,
-                                    @RequestParam String parentAccountId) {
+                                    @RequestParam Integer parentAccountId) {
         return accountService.getAccountList(parentAccountId);
+    }
+
+    @RequestMapping("delete/{accountId}")
+    @ResponseBody
+    public ResultBean deleteAccount(@PathVariable Integer accountId, @RequestParam Integer parentAccountId) {
+        return accountService.deleteAccount(accountId, parentAccountId);
     }
 
     @RequestMapping("passwd/modify")

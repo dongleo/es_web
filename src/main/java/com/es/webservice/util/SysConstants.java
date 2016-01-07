@@ -7,4 +7,7 @@ public class SysConstants {
 
     public static final Integer IS_MAIN_YES = 1;
     public static final Integer IS_MAIN_NO = 0;
+
+    public static final Integer IS_DELETE_YES = 1;
+    public static final Integer IS_DELETE_NO = 0;
 }
