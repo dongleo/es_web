@@ -15,8 +15,14 @@ public class LoginResult {
     private String gender;
     private Date birth;
     private Double waistline;
+    private Double hipline;
     private Integer height;
+    private Double score;
+    private Double scoreRatio;
+
     private String token;
+
+    private PhyIndexDto phyIdx;
 
     public Integer getAccountId() {
         return accountId;
@@ -66,6 +72,14 @@ public class LoginResult {
         this.waistline = waistline;
     }
 
+    public Double getHipline() {
+        return hipline;
+    }
+
+    public void setHipline(Double hipline) {
+        this.hipline = hipline;
+    }
+
     public Integer getHeight() {
         return height;
     }
@@ -74,11 +88,35 @@ public class LoginResult {
         this.height = height;
     }
 
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
+    }
+
+    public Double getScoreRatio() {
+        return scoreRatio;
+    }
+
+    public void setScoreRatio(Double scoreRatio) {
+        this.scoreRatio = scoreRatio;
+    }
+
     public String getToken() {
         return token;
     }
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public PhyIndexDto getPhyIdx() {
+        return phyIdx;
+    }
+
+    public void setPhyIdx(PhyIndexDto phyIdx) {
+        this.phyIdx = phyIdx;
     }
 }

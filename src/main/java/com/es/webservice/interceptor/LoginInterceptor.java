@@ -36,12 +36,9 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         }
         if (accountService.checkLogin(accountId, token)) {
             // TODO 返回错误json字符串
+            return true;
+        } else {
             return false;
         }
-        /*if (!flag) {
-            T_supplier_user user = LoginController.getLoginUser(request);
-            if (user != null) flag = true;
-        }*/
-        return true;
     }
 }

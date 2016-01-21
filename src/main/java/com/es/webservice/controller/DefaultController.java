@@ -55,14 +55,14 @@ public class DefaultController {
     @RequestMapping("getAccountList")
     @ResponseBody
     public ResultBean getAccountList(HttpServletRequest request,
-                                    @RequestParam Integer parentAccountId) {
-        return accountService.getAccountList(parentAccountId);
+                                    @RequestParam Integer accountId) {
+        return accountService.getAccountList(accountId);
     }
 
-    @RequestMapping("delete/{accountId}")
+    @RequestMapping("delete/{subAccountId}")
     @ResponseBody
-    public ResultBean deleteAccount(@PathVariable Integer accountId, @RequestParam Integer parentAccountId) {
-        return accountService.deleteAccount(accountId, parentAccountId);
+    public ResultBean deleteAccount(@PathVariable Integer subAccountId, @RequestParam Integer accountId) {
+        return accountService.deleteAccount(subAccountId, accountId);
     }
 
     @RequestMapping("passwd/modify")

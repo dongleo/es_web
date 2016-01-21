@@ -3,6 +3,7 @@ package com.es.webservice.dao;
 import com.es.webservice.dao.base.BaseHibernateDao4;
 import com.es.webservice.model.Account;
 import com.es.webservice.util.SysConstants;
+import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -40,5 +41,18 @@ public class AccountDao extends BaseHibernateDao4<Account, Integer> {
         params.put("accountId", accountId);
         params.put("isDelete", SysConstants.IS_DELETE_YES);
         return this.find(hql, params);
+    }
+
+    public Double queryScoreRatio(Double score) {
+        String sql = "SELECT t1.less/t2.total FROM (SELECT count(1) less FROM T_ACCOUNT t1 WHERE t1.SCORE <= :score) t1, (select count(1) total from t_account) t2;";
+
+        Query query = getSession().createSQLQuery(sql);
+        query.setDouble("score", score);
+        List<Object[]> result = query.list();
+        if (result != null && !result.isEmpty()) {
+            return (Double) result.get(0)[0];
+        }
+
+        return null;
     }
 }

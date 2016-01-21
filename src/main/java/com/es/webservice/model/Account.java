@@ -18,7 +18,10 @@ public class Account implements Serializable {
     private String gender;
     private Date birth;
     private Double waistline;
+    private Double hipline;
     private Integer height;
+    private Double score;
+    private Double scoreRatio;
     private String password;
     private Integer isMain;
     private Integer parentAccountId;
@@ -84,6 +87,15 @@ public class Account implements Serializable {
         this.waistline = waistline;
     }
 
+    @Column(name = "HIPLINE")
+    public Double getHipline() {
+        return hipline;
+    }
+
+    public void setHipline(Double hipline) {
+        this.hipline = hipline;
+    }
+
     @Column(name = "HEIGHT")
     public Integer getHeight() {
         return height;
@@ -91,6 +103,24 @@ public class Account implements Serializable {
 
     public void setHeight(Integer height) {
         this.height = height;
+    }
+
+    @Column(name = "SCORE")
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
+    }
+
+    @Column(name = "SCORE_RATIO")
+    public Double getScoreRatio() {
+        return scoreRatio;
+    }
+
+    public void setScoreRatio(Double scoreRatio) {
+        this.scoreRatio = scoreRatio;
     }
 
     @Column(name = "PASSWORD")

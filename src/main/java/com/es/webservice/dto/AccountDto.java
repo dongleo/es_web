@@ -15,7 +15,10 @@ public class AccountDto implements Serializable {
     private String gender;
     private Date birth;
     private Double waistline;
+    private Double hipline;
     private Integer height;
+    private Double score;
+    private Double scoreRatio;
     private String password;
     private String passwordCfm;
     private Integer isMain;
@@ -70,12 +73,36 @@ public class AccountDto implements Serializable {
         this.waistline = waistline;
     }
 
+    public Double getHipline() {
+        return hipline;
+    }
+
+    public void setHipline(Double hipline) {
+        this.hipline = hipline;
+    }
+
     public Integer getHeight() {
         return height;
     }
 
     public void setHeight(Integer height) {
         this.height = height;
+    }
+
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
+    }
+
+    public Double getScoreRatio() {
+        return scoreRatio;
+    }
+
+    public void setScoreRatio(Double scoreRatio) {
+        this.scoreRatio = scoreRatio;
     }
 
     public String getPassword() {

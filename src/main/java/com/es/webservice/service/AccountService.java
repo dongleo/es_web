@@ -1,16 +1,20 @@
 package com.es.webservice.service;
 
 import com.es.webservice.dao.AccountDao;
+import com.es.webservice.dao.PhyIndexDao;
 import com.es.webservice.dto.AccountDto;
 import com.es.webservice.dto.LoginResult;
+import com.es.webservice.dto.PhyIndexDto;
 import com.es.webservice.dto.ResultBean;
 import com.es.webservice.model.Account;
+import com.es.webservice.model.PhyIndex;
 import com.es.webservice.util.MD5Util;
 import com.es.webservice.util.SysConstants;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -21,11 +25,14 @@ import java.util.List;
  * Created by dongYer on 15/11/25.
  */
 @Service
+@Transactional
 public class AccountService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Resource
     private AccountDao accountDao;
+    @Resource
+    private PhyIndexDao phyIndexDao;
 
     public ResultBean register(AccountDto dto) {
         if (!StringUtils.equals(dto.getPassword(), dto.getPasswordCfm())) {
@@ -35,6 +42,7 @@ public class AccountService {
         account.setTel(dto.getTel());
         account.setPassword(MD5Util.MD5(dto.getPassword()));
         account.setIsMain(SysConstants.IS_MAIN_YES);
+        account.setIsDelete(SysConstants.IS_DELETE_NO);
         account.setIp(dto.getIp());
         account.setRegisterTime(new Date());
         logger.info("new user register success. tel: " + account.getTel() + ", ip: " + account.getIp());
@@ -62,8 +70,20 @@ public class AccountService {
         resultData.setGender(account.getGender());
         resultData.setBirth(account.getBirth());
         resultData.setWaistline(account.getWaistline());
+        resultData.setHipline(account.getHipline());
         resultData.setHeight(account.getHeight());
+        resultData.setScore(account.getScore());
+        resultData.setScoreRatio(account.getScoreRatio());
         resultData.setToken(generateToken(account));
+
+        PhyIndex phyIdx = phyIndexDao.queryLastedByAccountId(account.getAccountId());
+        PhyIndexDto phyIndexDto = new PhyIndexDto();
+        phyIndexDto.setAccountId(account.getAccountId());
+        phyIndexDto.setBmi(phyIdx.getBmi());
+        phyIndexDto.setFatRatio(phyIdx.getFatRatio());
+        phyIndexDto.setWeight(phyIdx.getWeight());
+        resultData.setPhyIdx(phyIndexDto);
+
         resultBean.setData(resultData);
 
         account.setLastLoginTime(new Date());
@@ -80,15 +100,27 @@ public class AccountService {
         account.setAccountName(dto.getAccountName());
         account.setGender(dto.getGender());
         account.setBirth(dto.getBirth());
+        account.setHipline(dto.getHipline());
         account.setWaistline(dto.getWaistline());
         account.setHeight(dto.getHeight());
         account.setUpdateTime(new Date());
 
+        if (dto.getScore() != null) {
+            account.setScore(dto.getScore());
+            Double scoreRatio = accountDao.queryScoreRatio(account.getScore());
+            if (scoreRatio != null) {
+                account.setScoreRatio(scoreRatio);
+            }
+        }
+
+        ResultBean resultBean = new ResultBean(true, "");
         if (!accountDao.update(account)) {
-            return new ResultBean(false, "");
+            resultBean.setSuccess(false);
+            return resultBean;
         }
         logger.info("user update. accountId: " + account.getAccountId() + ", ip: " + account.getIp());
-        return new ResultBean(true, "");
+        resultBean.setData(account);
+        return resultBean;
     }
 
     public ResultBean modifyPasswd(AccountDto dto) {
@@ -123,7 +155,8 @@ public class AccountService {
         newAccount.setHeight(dto.getHeight());
         newAccount.setUpdateTime(new Date());
         newAccount.setIsMain(SysConstants.IS_MAIN_NO);
-        newAccount.setParentAccountId(account.getParentAccountId());
+        newAccount.setIsDelete(SysConstants.IS_DELETE_NO);
+        newAccount.setParentAccountId(account.getAccountId());
         newAccount.setRegisterTime(new Date());
 
         newAccount = accountDao.add(newAccount);
@@ -148,8 +181,11 @@ public class AccountService {
                 dto.setGender(account.getGender());
                 dto.setBirth(account.getBirth());
                 dto.setWaistline(account.getWaistline());
+                dto.setHipline(account.getHipline());
                 dto.setHeight(account.getHeight());
                 dto.setIsMain(account.getIsMain());
+                dto.setScore(account.getScore());
+                dto.setScoreRatio(account.getScoreRatio());
                 dto.setParentAccountId(account.getParentAccountId());
 
                 dtoList.add(dto);

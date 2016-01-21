@@ -16,9 +16,13 @@ public class PhyIndex implements Serializable {
     private Integer accountId;
     private Integer age;
     private Double waistline;
+    private Double hipline;
     private Integer height;
     private Double weight;
+    private Double bmi;
     private Double fatRatio;
+    private Double score;
+    private Double scoreRatio;
     private Date submitTime;
     private Integer isValid;
     private Date updateTime;
@@ -61,6 +65,15 @@ public class PhyIndex implements Serializable {
         this.waistline = waistline;
     }
 
+    @Column(name = "HIPLINE")
+    public Double getHipline() {
+        return hipline;
+    }
+
+    public void setHipline(Double hipline) {
+        this.hipline = hipline;
+    }
+
     @Column(name = "HEIGHT")
     public Integer getHeight() {
         return height;
@@ -79,6 +92,15 @@ public class PhyIndex implements Serializable {
         this.weight = weight;
     }
 
+    @Column(name = "BMI")
+    public Double getBmi() {
+        return bmi;
+    }
+
+    public void setBmi(Double bmi) {
+        this.bmi = bmi;
+    }
+
     @Column(name = "FAT_RATIO")
     public Double getFatRatio() {
         return fatRatio;
@@ -86,6 +108,24 @@ public class PhyIndex implements Serializable {
 
     public void setFatRatio(Double fatRatio) {
         this.fatRatio = fatRatio;
+    }
+
+    @Column(name = "SCORE")
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
+    }
+
+    @Column(name = "SCORE_RATIO")
+    public Double getScoreRatio() {
+        return scoreRatio;
+    }
+
+    public void setScoreRatio(Double scoreRatio) {
+        this.scoreRatio = scoreRatio;
     }
 
     @Column(name = "SUBMIT_TIME")

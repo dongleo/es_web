@@ -10,14 +10,17 @@ import com.es.webservice.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by dongYer on 15/11/27.
  */
 @Service
+@Transactional
 public class PhyIndexService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -33,18 +36,36 @@ public class PhyIndexService {
         }
         PhyIndex index = new PhyIndex();
         index.setWeight(dto.getWeight());
+        index.setBmi(dto.getBmi());
         index.setFatRatio(dto.getFatRatio());
         index.setAccountId(account.getAccountId());
         index.setAge(DateUtil.getAgeByBirthday(account.getBirth()));
         index.setWaistline(account.getWaistline());
+        index.setHipline(account.getHipline());
         index.setHeight(account.getHeight());
         index.setSubmitTime(new Date());
 
+        if (dto.getScore() != null) {
+            index.setScore(dto.getScore());
+            account.setScore(dto.getScore());
+
+            Double scoreRatio = accountDao.queryScoreRatio(index.getScore());
+            if (scoreRatio != null) {
+                index.setScoreRatio(scoreRatio);
+                account.setScore(scoreRatio);
+            }
+        }
+
+        ResultBean resultBean = new ResultBean(true, "");
         index = phyIndexDao.add(index);
+        accountDao.update(account);
         if (index == null) {
-            return new ResultBean(false, "");
+            resultBean.setSuccess(false);
+            return resultBean;
         }
         logger.info("user submit phy index. accountId: " + account.getAccountId());
-        return new ResultBean(true, "");
+        resultBean.setData(index);
+        return resultBean;
     }
+
 }
