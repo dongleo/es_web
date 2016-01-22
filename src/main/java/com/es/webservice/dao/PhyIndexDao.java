@@ -47,28 +47,19 @@ public class PhyIndexDao extends BaseHibernateDao4<PhyIndex, Integer> {
     public List<PhyIndex> queryPhyIdxList(Integer accountId, Date startDate, Date endDate) {
         String sql = "select * from t_phy_idx t where (t.account_id, t.`ID`, DATE_FORMAT(t.SUBMIT_TIME, '%Y-%m-%d')) in" +
                 "(select p.account_id, p.`ID`, DATE_FORMAT(p.SUBMIT_TIME, '%Y-%m-%d') from t_phy_idx p " +
-                "where p.account_id = :accountId and p.SUBMIT_TIME >= ':startDate' and p.SUBMIT_TIME >= 'endDate' group by DATE_FORMAT(p.SUBMIT_TIME, '%Y-%m-%d'));";
+                "where p.account_id = :accountId and p.SUBMIT_TIME >= :startDate and p.SUBMIT_TIME < :endDate group by DATE_FORMAT(p.SUBMIT_TIME, '%Y-%m-%d'));";
 
-        Query query = getSession().createSQLQuery(sql);
-        query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+        Query query = getSession().createSQLQuery(sql).addEntity(PhyIndex.class);
+//        query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 
-        query.setInteger("accountId", accountId);
-        query.setString("startDate", DateUtil.format(startDate));
-        query.setString("endDate", DateUtil.format(endDate));
+        query.setParameter("accountId", accountId);
+        query.setParameter("startDate", DateUtil.format(startDate));
+        query.setParameter("endDate", DateUtil.format(endDate));
 
-        List result = query.list();
-
-        List<PhyIndex> indexList = new ArrayList<>();
-        if (result != null && !result.isEmpty()) {
-            for (int i = 0; i < indexList.size(); i++) {
-                Map map = (Map) indexList.get(i);
-                indexList.add(parseIndex(map));
-            }
-        }
-        return indexList;
+        return (List<PhyIndex>) query.list();
     }
 
-    private PhyIndex parseIndex(Map map) {
+    /*private PhyIndex parseIndex(Map map) {
         PhyIndex index = new PhyIndex();
 
         index.setId((Integer) map.get("ID"));
@@ -86,5 +77,5 @@ public class PhyIndexDao extends BaseHibernateDao4<PhyIndex, Integer> {
         index.setUpdateTime((Date) map.get("UPDATE_TIME"));
 
         return index;
-    }
+    }*/
 }

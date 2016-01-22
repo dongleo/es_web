@@ -6,6 +6,7 @@ import com.es.webservice.util.SysConstants;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,10 +50,8 @@ public class AccountDao extends BaseHibernateDao4<Account, Integer> {
         Query query = getSession().createSQLQuery(sql);
         query.setDouble("score", score);
         List<Object[]> result = query.list();
-        if (result != null && !result.isEmpty()) {
-            return (Double) result.get(0)[0];
-        }
 
-        return null;
+        BigDecimal sr = (BigDecimal) query.uniqueResult();
+        return sr.doubleValue();
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -68,4 +69,25 @@ public class PhyIndexService {
         return resultBean;
     }
 
+    public ResultBean queryHistory(Integer accountId, Date startDate, Date endDate) {
+        ResultBean resultBean = new ResultBean(true, "");
+        List<PhyIndex> indexList = phyIndexDao.queryPhyIdxList(accountId, startDate, endDate);
+        List<PhyIndexDto> dtoList = new ArrayList<>();
+        if (indexList != null && !indexList.isEmpty()) {
+            for (PhyIndex index : indexList) {
+                PhyIndexDto dto  = new PhyIndexDto();
+                dto.setAccountId(index.getAccountId());
+                dto.setScore(index.getScore());
+                dto.setBmi(index.getBmi());
+                dto.setFatRatio(index.getFatRatio());
+                dto.setScoreRatio(index.getScoreRatio());
+                dto.setWeight(index.getWeight());
+                dto.setDate(DateUtil.format(index.getSubmitTime()));
+
+                dtoList.add(dto);
+            }
+        }
+        resultBean.setData(dtoList);
+        return resultBean;
+    }
 }

@@ -15,6 +15,8 @@ public class PhyIndexDto implements Serializable {
     private Double score;
     private Double scoreRatio;
 
+    private String date;
+
     public Integer getAccountId() {
         return accountId;
     }
@@ -61,5 +63,13 @@ public class PhyIndexDto implements Serializable {
 
     public void setScoreRatio(Double scoreRatio) {
         this.scoreRatio = scoreRatio;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }
