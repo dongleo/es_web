@@ -1,6 +1,7 @@
 package com.es.webservice;
 
 import com.es.webservice.dto.PhyIndexDto;
+import com.es.webservice.dto.QueryHistoryRequestDto;
 import com.es.webservice.dto.ResultBean;
 import com.es.webservice.service.PhyIndexService;
 import com.es.webservice.util.DateUtil;
@@ -42,7 +43,11 @@ public class PhyIdxServiceTest {
     public void queryHistoryTest() {
         Date startDate = DateUtil.parseDate("2015-12-01");
         Date endDate = DateUtil.parseDate("2016-12-01");
-        ResultBean result = phyIndexService.queryHistory(1, startDate, endDate);
+        QueryHistoryRequestDto requestDto = new QueryHistoryRequestDto();
+        requestDto.setAccountId(1);
+        requestDto.setStartDate(startDate);
+        requestDto.setEndDate(endDate);
+        ResultBean result = phyIndexService.queryHistory(requestDto);
 
         assert result.isSuccess();
     }

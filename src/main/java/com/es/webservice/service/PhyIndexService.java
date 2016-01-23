@@ -3,6 +3,7 @@ package com.es.webservice.service;
 import com.es.webservice.dao.AccountDao;
 import com.es.webservice.dao.PhyIndexDao;
 import com.es.webservice.dto.PhyIndexDto;
+import com.es.webservice.dto.QueryHistoryRequestDto;
 import com.es.webservice.dto.ResultBean;
 import com.es.webservice.model.Account;
 import com.es.webservice.model.PhyIndex;
@@ -69,9 +70,10 @@ public class PhyIndexService {
         return resultBean;
     }
 
-    public ResultBean queryHistory(Integer accountId, Date startDate, Date endDate) {
+    public ResultBean queryHistory(QueryHistoryRequestDto requestDto) {
         ResultBean resultBean = new ResultBean(true, "");
-        List<PhyIndex> indexList = phyIndexDao.queryPhyIdxList(accountId, startDate, endDate);
+        List<PhyIndex> indexList = phyIndexDao.queryPhyIdxList(requestDto.getAccountId(),
+                requestDto.getStartDate(), requestDto.getEndDate());
         List<PhyIndexDto> dtoList = new ArrayList<>();
         if (indexList != null && !indexList.isEmpty()) {
             for (PhyIndex index : indexList) {

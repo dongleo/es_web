@@ -2,6 +2,7 @@ package com.es.webservice.controller;
 
 import com.es.webservice.dto.AccountDto;
 import com.es.webservice.dto.PhyIndexDto;
+import com.es.webservice.dto.QueryHistoryRequestDto;
 import com.es.webservice.dto.ResultBean;
 import com.es.webservice.service.AccountService;
 import com.es.webservice.service.PhyIndexService;
@@ -77,5 +78,11 @@ public class DefaultController {
     @ResponseBody
     public ResultBean submitPhy(@RequestBody PhyIndexDto dto) {
         return phyIndexService.submit(dto);
+    }
+
+    @RequestMapping("phy/history")
+    @ResponseBody
+    public ResultBean queryHistory(@RequestBody QueryHistoryRequestDto dto) {
+        return phyIndexService.queryHistory(dto);
     }
 }
