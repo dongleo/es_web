@@ -52,6 +52,6 @@ public class AccountDao extends BaseHibernateDao4<Account, Integer> {
         List<Object[]> result = query.list();
 
         BigDecimal sr = (BigDecimal) query.uniqueResult();
-        return sr.doubleValue();
+        return sr.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 }

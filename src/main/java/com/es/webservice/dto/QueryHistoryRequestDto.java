@@ -9,6 +9,7 @@ public class QueryHistoryRequestDto {
     private Integer accountId;
     private Date startDate;
     private Date endDate;
+    private String mode;
 
     public Integer getAccountId() {
         return accountId;
@@ -32,5 +33,13 @@ public class QueryHistoryRequestDto {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
     }
 }

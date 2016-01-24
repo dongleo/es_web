@@ -7,6 +7,7 @@ import com.es.webservice.dto.QueryHistoryRequestDto;
 import com.es.webservice.dto.ResultBean;
 import com.es.webservice.model.Account;
 import com.es.webservice.model.PhyIndex;
+import com.es.webservice.model.PhyIndexHistory;
 import com.es.webservice.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by dongYer on 15/11/27.
@@ -54,7 +53,7 @@ public class PhyIndexService {
             Double scoreRatio = accountDao.queryScoreRatio(index.getScore());
             if (scoreRatio != null) {
                 index.setScoreRatio(scoreRatio);
-                account.setScore(scoreRatio);
+                account.setScoreRatio(scoreRatio);
             }
         }
 
@@ -72,24 +71,49 @@ public class PhyIndexService {
 
     public ResultBean queryHistory(QueryHistoryRequestDto requestDto) {
         ResultBean resultBean = new ResultBean(true, "");
-        List<PhyIndex> indexList = phyIndexDao.queryPhyIdxList(requestDto.getAccountId(),
-                requestDto.getStartDate(), requestDto.getEndDate());
+        String mode = "%Y-%m-%d";
+        String format = "yyyy-MM-dd";
+        if ("MONTH".equals(requestDto.getMode())) {
+            mode = "%Y-%m";
+            format = "yyyy-MM";
+        }
+        List<PhyIndexHistory> indexList = phyIndexDao.queryPhyIdxList(requestDto.getAccountId(),
+                requestDto.getStartDate(), requestDto.getEndDate(), mode);
         List<PhyIndexDto> dtoList = new ArrayList<>();
+        Map<String, PhyIndexHistory> historyMap = new HashMap<>();
         if (indexList != null && !indexList.isEmpty()) {
-            for (PhyIndex index : indexList) {
-                PhyIndexDto dto  = new PhyIndexDto();
-                dto.setAccountId(index.getAccountId());
-                dto.setScore(index.getScore());
-                dto.setBmi(index.getBmi());
-                dto.setFatRatio(index.getFatRatio());
-                dto.setScoreRatio(index.getScoreRatio());
-                dto.setWeight(index.getWeight());
-                dto.setDate(DateUtil.format(index.getSubmitTime()));
-
-                dtoList.add(dto);
+            for (PhyIndexHistory index : indexList) {
+                historyMap.put(index.getSubmitTime(), index);
             }
+        }
+        Date date = requestDto.getStartDate();
+        PhyIndexHistory history;
+        while (date.before(requestDto.getEndDate())) {
+            String key = DateUtil.format(date, format);
+            PhyIndexDto dto = new PhyIndexDto();
+            dto.setDate(key);
+
+            history = historyMap.get(key);
+            if (history != null) {
+                dto.setWeight(history.getWeight());
+                dto.setBmi(history.getBmi());
+                dto.setFatRatio(history.getFatRatio());
+            }
+            dtoList.add(dto);
+
+            date = addDate(date, mode);
         }
         resultBean.setData(dtoList);
         return resultBean;
+    }
+
+    protected Date addDate(Date date, String mode) {
+        if ("MONTH".equals(mode)) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(date.getTime());
+            calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + 1);
+            return calendar.getTime();
+        }
+        return new Date(date.getTime() + 86400 * 1000);
     }
 }

@@ -2,6 +2,7 @@ package com.es.webservice.dao;
 
 import com.es.webservice.dao.base.BaseHibernateDao4;
 import com.es.webservice.model.PhyIndex;
+import com.es.webservice.model.PhyIndexHistory;
 import com.es.webservice.util.DateUtil;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -44,19 +45,22 @@ public class PhyIndexDao extends BaseHibernateDao4<PhyIndex, Integer> {
      * (select p.account_id, p.`ID`, DATE_FORMAT(p.SUBMIT_TIME, '%Y-%m-%d') from t_phy_idx p
      * where p.account_id = 6 and p.SUBMIT_TIME > '2015-01-01' group by DATE_FORMAT(p.SUBMIT_TIME, '%Y-%m-%d'));
      */
-    public List<PhyIndex> queryPhyIdxList(Integer accountId, Date startDate, Date endDate) {
-        String sql = "select * from t_phy_idx t where (t.account_id, t.`ID`, DATE_FORMAT(t.SUBMIT_TIME, '%Y-%m-%d')) in" +
+    public List<PhyIndexHistory> queryPhyIdxList(Integer accountId, Date startDate, Date endDate, String mode) {
+        /*String sql = "select * from t_phy_idx t where (t.account_id, t.`ID`, DATE_FORMAT(t.SUBMIT_TIME, '%Y-%m-%d')) in" +
                 "(select p.account_id, p.`ID`, DATE_FORMAT(p.SUBMIT_TIME, '%Y-%m-%d') from t_phy_idx p " +
-                "where p.account_id = :accountId and p.SUBMIT_TIME >= :startDate and p.SUBMIT_TIME < :endDate group by DATE_FORMAT(p.SUBMIT_TIME, '%Y-%m-%d'));";
+                "where p.account_id = :accountId and p.SUBMIT_TIME >= :startDate and p.SUBMIT_TIME < :endDate group by DATE_FORMAT(p.SUBMIT_TIME, '%Y-%m-%d'));";*/
+        String sql = "SELECT t.ACCOUNT_ID ACCOUNT_ID, DATE_FORMAT(t.SUBMIT_TIME, '" + mode + "') CREATE_TIME, avg(t.weight) WEIGHT, avg(t.bmi) BMI, avg(t.fat_ratio) FAT_RATIO " +
+                "from t_phy_idx t where t.account_id = :accountId and t.SUBMIT_TIME >= :startDate and t.SUBMIT_TIME < :endDate " +
+                "group by DATE_FORMAT(t.SUBMIT_TIME, '" + mode + "')";
 
-        Query query = getSession().createSQLQuery(sql).addEntity(PhyIndex.class);
+        Query query = getSession().createSQLQuery(sql).addEntity(PhyIndexHistory.class);
 //        query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 
         query.setParameter("accountId", accountId);
         query.setParameter("startDate", DateUtil.format(startDate));
         query.setParameter("endDate", DateUtil.format(endDate));
 
-        return (List<PhyIndex>) query.list();
+        return (List<PhyIndexHistory>) query.list();
     }
 
     /*private PhyIndex parseIndex(Map map) {

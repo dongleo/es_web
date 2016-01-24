@@ -77,12 +77,14 @@ public class AccountService {
         resultData.setToken(generateToken(account));
 
         PhyIndex phyIdx = phyIndexDao.queryLastedByAccountId(account.getAccountId());
-        PhyIndexDto phyIndexDto = new PhyIndexDto();
-        phyIndexDto.setAccountId(account.getAccountId());
-        phyIndexDto.setBmi(phyIdx.getBmi());
-        phyIndexDto.setFatRatio(phyIdx.getFatRatio());
-        phyIndexDto.setWeight(phyIdx.getWeight());
-        resultData.setPhyIdx(phyIndexDto);
+        if (phyIdx != null) {
+            PhyIndexDto phyIndexDto = new PhyIndexDto();
+            phyIndexDto.setAccountId(account.getAccountId());
+            phyIndexDto.setBmi(phyIdx.getBmi());
+            phyIndexDto.setFatRatio(phyIdx.getFatRatio());
+            phyIndexDto.setWeight(phyIdx.getWeight());
+            resultData.setPhyIdx(phyIndexDto);
+        }
 
         resultBean.setData(resultData);
 
@@ -219,6 +221,10 @@ public class AccountService {
      * generate token.
      */
     protected String generateToken(Account account) {
-        return MD5Util.MD5(account.getAccountName() + "_" + account.getPassword());
+        return MD5Util.MD5(account.getAccountId() + "_" + account.getPassword());
+    }
+
+    public static void main(String[] args) {
+        System.out.println();
     }
 }
