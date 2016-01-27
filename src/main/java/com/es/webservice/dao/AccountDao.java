@@ -45,7 +45,7 @@ public class AccountDao extends BaseHibernateDao4<Account, Integer> {
     }
 
     public Double queryScoreRatio(Double score) {
-        String sql = "SELECT t1.less/t2.total FROM (SELECT count(1) less FROM T_ACCOUNT t1 WHERE t1.SCORE <= :score) t1, (select count(1) total from t_account) t2;";
+        String sql = "SELECT t1.less/t2.total FROM (SELECT count(1) less FROM T_ACCOUNT t1 WHERE t1.SCORE <= :score) t1, (select count(1) total from T_ACCOUNT) t2;";
 
         Query query = getSession().createSQLQuery(sql);
         query.setDouble("score", score);

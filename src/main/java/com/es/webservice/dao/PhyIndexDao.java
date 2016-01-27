@@ -50,7 +50,7 @@ public class PhyIndexDao extends BaseHibernateDao4<PhyIndex, Integer> {
                 "(select p.account_id, p.`ID`, DATE_FORMAT(p.SUBMIT_TIME, '%Y-%m-%d') from t_phy_idx p " +
                 "where p.account_id = :accountId and p.SUBMIT_TIME >= :startDate and p.SUBMIT_TIME < :endDate group by DATE_FORMAT(p.SUBMIT_TIME, '%Y-%m-%d'));";*/
         String sql = "SELECT t.ACCOUNT_ID ACCOUNT_ID, DATE_FORMAT(t.SUBMIT_TIME, '" + mode + "') CREATE_TIME, avg(t.weight) WEIGHT, avg(t.bmi) BMI, avg(t.fat_ratio) FAT_RATIO " +
-                "from t_phy_idx t where t.account_id = :accountId and t.SUBMIT_TIME >= :startDate and t.SUBMIT_TIME < :endDate " +
+                "from T_PHY_IDX t where t.account_id = :accountId and t.SUBMIT_TIME >= :startDate and t.SUBMIT_TIME < :endDate " +
                 "group by DATE_FORMAT(t.SUBMIT_TIME, '" + mode + "')";
 
         Query query = getSession().createSQLQuery(sql).addEntity(PhyIndexHistory.class);
